@@ -4,6 +4,25 @@ from .models import *
 from random import randint
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth.models import User
+import smtplib
+from email.mime.text import MIMEText
+
+def sendGmail(info):
+    msg = MIMEText(u'{}'.format(info['b']),'html')
+    msg['Subject'] = info['s']
+    msg['From'] = info['g_sender']
+    msg['To'] = info['r_email']
+    try:
+        print("Attempting to send, please wait...")
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.ehlo()
+        server.login(info['g_sender'], info['g_pass'])
+        server.sendmail(info['g_sender'], info['r_email'], msg.as_string())
+        server.close()
+        print('Email sent!')
+    except:
+        print('Something went wrong...')
 
 def login_user(request):
     if request.method == "POST":
@@ -31,19 +50,22 @@ def logout_user(request):
     
 def signup(request):
     def generateVerificationCode():
-        return randint(11054,99999)
+        return randint(10001,98765)
         
     if request.method == "POST":
         first_name= request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         username = request.POST.get('username')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
         
         attemptObj = SignUpAttempt.objects.create(
             first_name = first_name,
             last_name = last_name,
             email = email,
             username = username,
+            password = password1,
             verification_code = generateVerificationCode())
         
         request.session['attempt_id'] = attemptObj.id
@@ -59,7 +81,20 @@ def verificationCode(request):
         attemptObj = SignUpAttempt.objects.get(id=attempt_id)
         
         if verification_code == attemptObj.verification_code:
-            return render(request, 'main/profile.html')
+            userObj = User.objects.create_user(
+                username = attemptObj.username,
+                password = attemptObj.password)
+            
+            UserProfile.objects.create(
+                user = userObj,
+                first_name = attemptObj.first_name,
+                last_name = attemptObj.last_name,
+                email = attemptObj.email)
+                
+            login(request,userObj)
+            
+            # return render(request, 'main/profile.html')
+            return redirect('main:profile')
         else:
             x = {}
             x['attempt_id'] = request.session.get('attempt_id')
@@ -67,8 +102,28 @@ def verificationCode(request):
             return render(request, 'main/signupProcess/verificationCode.html',x)
         
     else:
+        attempt_id = request.session.get('attempt_id')
+        attemptObj = SignUpAttempt.objects.get(id=attempt_id)
+        
         x = {}
-        x['attempt_id'] = request.session.get('attempt_id')
+        x['attempt_id'] = attempt_id
+        
+        serverEmailObj = User.objects.get(username="SERVEREMAIL")
+        
+        info = {}
+        info['g_sender'] = serverEmailObj.email
+        info['g_pass'] = serverEmailObj.first_name
+        info['r_email'] = attemptObj.email
+        info['s'] = "Verification Code - CoolForumSite"
+        info['b'] = """
+        Here is your verification code:
+        {}
+        """.format(attemptObj.verification_code)
+        
+        sendGmail(info)
+        
+        
+        
         return render(request, 'main/signupProcess/verificationCode.html',x)
 
 def profile(request):

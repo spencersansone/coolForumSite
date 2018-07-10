@@ -12,6 +12,7 @@ class SignUpAttempt(models.Model):
     last_name = models.CharField(max_length=100)
     email = models.EmailField()
     username = models.CharField(max_length=100)
+    password = models.CharField(max_length=100)
     verification_code = models.CharField(max_length=100)
     
 
