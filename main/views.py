@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login, logout
+from .models import *
 
 def login_user(request):
     if request.method == "POST":
@@ -20,7 +21,17 @@ def login_user(request):
         elif request.GET.get('next'):
             return render(request, 'main/login.html', {'error_message': 'You must log in to see this page' })
     return render(request, 'main/login.html')
+    
+def logout_user(request):
+    logout(request)
+    return render(request, 'main/login.html')
 
 def profile(request):
-    return render(request, 'main/profile.html')
+    x = {}
+    
+    # currentUser = request.user
+    currentUser = UserProfile.objects.get(user=request.user)
+    x['currentUser'] = currentUser
+    
+    return render(request, 'main/profile.html', x)
 # Create your views here.

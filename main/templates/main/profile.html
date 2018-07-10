@@ -5,9 +5,10 @@
 {% block body %}
 <div class="col-sm-12">
     <h1>Profile</h1>
-    <h1>First Name: </h1>
-    <h1>Last Name: </h1>
-    <h1>Email: </h1>
-    <h1>Username: </h1>
+    <h1>First Name: {{currentUser.first_name}}</h1>
+    <h1>Last Name: {{currentUser.last_name}}</h1>
+    <h1>Email: {{currentUser.email}}</h1>
+    <h1>Username: {{currentUser.user.username}}</h1>
+    <a href="{% url 'main:logout_user' %}"><h1>Logout</h1></a>
 </div>
 {% endblock %}
