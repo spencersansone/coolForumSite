@@ -9,6 +9,8 @@ import smtplib
 from email.mime.text import MIMEText
 from django.db.models import Q
 import re
+from django.contrib.auth.decorators import login_required
+
 
 def sendGmail(info):
     msg = MIMEText(u'{}'.format(info['b']),'html')
@@ -49,14 +51,7 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return redirect('main:login_user')
-  
-def home(request):
-    if request.user.is_authenticated:
-        return redirect('main:profile')
-    else:
-        return redirect('main:login_user')
-        
- 
+    
 def signup(request):
     error_messages = []
     
@@ -194,6 +189,16 @@ def verificationCode(request):
         
         return render(request, 'main/signupProcess/verificationCode.html',x)
 
+def home(request):
+    if request.user.is_authenticated:
+        return redirect('main:profile')
+    else:
+        return redirect('main:login_user')
+        
+#======================
+#Below: Require authorized user
+
+@login_required
 def profile(request):
     x = {}
     
@@ -202,14 +207,16 @@ def profile(request):
     x['currentUser'] = currentUser
     
     return render(request, 'main/profile.html', x)
-    
+
+@login_required
 def posts(request):
     posts = ForumPost.objects.all()
     
     x = {}
     x['posts'] = posts
     return render(request, 'main/posts.html', x)
-    
+
+@login_required
 def addPost(request):
     error_messages = []
     
