@@ -155,7 +155,9 @@ def verificationCode(request):
                 last_name = attemptObj.last_name,
                 email = attemptObj.email)
             
-            SignUpAttempt.objects.filter(Q(username=attemptObj.username) | Q(email=attemptObj.email)).delete()
+            SignUpAttempt.objects.filter(
+                Q(username=attemptObj.username) | Q(email=attemptObj.email)
+                ).delete()
             
             login(request,userObj)
             
@@ -207,4 +209,40 @@ def posts(request):
     x = {}
     x['posts'] = posts
     return render(request, 'main/posts.html', x)
+    
+def addPost(request):
+    error_messages = []
+    
+    titlePattern = "^[\s\S]{1,100}$"
+    contentPattern = "^[\s\S]{1,10000}$"
+    
+    if request.method == "POST":
+        currentUser = request.user
+        
+        content = request.POST.get('content')
+        if not re.compile(contentPattern).match(content):
+            error_messages += ["For your content, please enter at least 1 character but no more than 10,000."]
+            
+        title = request.POST.get('title')
+        if not re.compile(titlePattern).match(title):
+            error_messages += ["For your title, please enter at least 1 character but no more than 100."]
+    
+        if len(error_messages) > 0:
+            x = {}
+            x['titlePattern'] = titlePattern
+            x['contentPattern'] = contentPattern
+            x['error_messages'] = error_messages
+            return render(request, 'main/addPost.html', x)
+        
+        ForumPost.objects.create(
+            title = title,
+            user_profile = UserProfile.objects.get(user=currentUser),
+            content = content)
+        return redirect('main:posts')
+    else:
+        x = {}
+        x['titlePattern'] = titlePattern
+        x['contentPattern'] = contentPattern
+        return render(request, 'main/addPost.html', x)
+
 # Create your views here.

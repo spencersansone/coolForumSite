@@ -1,0 +1,35 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+<div class="col-sm-12">
+    {% if error_messages %}
+      <h3 style="color:#8e2020;font-weight:bold;">Errors:</h3>
+      {% for message in error_messages %}
+        <h3 style="color:#8e2020;font-weight:bold;">{{ message }}</h3>
+      {% endfor %}
+    {% endif %}
+    <form role="form" action="{% url 'main:add_post' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" class="form-control" name="title" required="required" pattern={{titlePattern}} placeholder="Title">
+      </div>
+      
+      <!--<div class="form-group">-->
+      <!--  <label for="content">Content:</label>-->
+      <!--  <input type="text" class="form-control" name="content" placeholder="Enter your post here...">-->
+      <!--</div>-->
+      
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Example textarea</label>
+        <textarea type="text" class="form-control" name="content" required="required" pattern="{{contentPattern}}" id="exampleFormControlTextarea1" rows="3"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+</div>
+{% endblock %}
