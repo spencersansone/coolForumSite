@@ -4,7 +4,13 @@
 
 {% block body %}
 <div class="col-sm-12">
-    <a href="{% url 'main:add_post' %}"><h1>Add Post</h1></a>
+    <br>
+    <nav aria-label="breadcrumb" style="color:black;">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a>Forum Home</a></li>
+      </ol>
+    </nav>
+    <a href="{% url 'main:add_post' %}"><button type="button" class="btn btn-success btn-lg btn-block">Add Post</button></a>
     {% for post in posts %}
     <h1>Title: {{post.title}}</h1>
     <h1>User that posted: {{post.user_profile}}</h1>

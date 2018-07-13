@@ -4,11 +4,21 @@
 
 {% block body %}
 <div class="col-sm-12">
+    <br>
+    <nav aria-label="breadcrumb" style="color:black;">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'main:posts' %}">Forum Home</a></li>
+        <li class="breadcrumb-item"><a>Profile</a></li>
+      </ol>
+    </nav>
     <h1>Profile</h1>
     <h1>First Name: {{currentUser.first_name}}</h1>
     <h1>Last Name: {{currentUser.last_name}}</h1>
     <h1>Email: {{currentUser.email}}</h1>
     <h1>Username: {{currentUser.user.username}}</h1>
     <a href="{% url 'main:logout_user' %}"><h1>Logout</h1></a>
+    <a href="{% url 'main:posts' %}">
+        <button type="button" class="btn btn-danger btn-lg btn-block">Back to Posts</button>
+    </a>
 </div>
 {% endblock %}
