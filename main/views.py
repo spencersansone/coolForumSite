@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 import smtplib
 from email.mime.text import MIMEText
 from django.db.models import Q
+import re
 
 def sendGmail(info):
     msg = MIMEText(u'{}'.format(info['b']),'html')
@@ -58,28 +59,50 @@ def home(request):
  
 def signup(request):
     error_messages = []
+    
+    first_namePattern = "[A-Za-z]+"
+    last_namePattern = "[A-Za-z]+"
+    emailPattern = "[^@]+@[^@]+\.[^@]+"
+    usernamePattern = "[A-Za-z0-9@.+-_]+"
+    passwordPattern = "[\S\s]{8,16}"
+    
     def generateVerificationCode():
         return randint(10001,98765)
         
     if request.method == "POST":
+        
         first_name= request.POST.get('first_name').lower().capitalize()
+        if not re.compile(first_namePattern).match(first_name):
+            error_messages += ["Please enter a valid first name."]
+        
         last_name = request.POST.get('last_name').lower().capitalize()
+        if not re.compile(last_namePattern).match(last_name):
+            error_messages += ["Please enter a valid last name."]
         
         username = request.POST.get('username')
-        try:
-            uniqueUserCheck = User.objects.get(username=username)
-            error_messages += ["Username already exists, please try a different one."]
-        except:
-            pass
+        if not re.compile(usernamePattern).match(username):
+            error_messages += ["Please enter a valid username."]
+        else:
+            try:
+                uniqueUserCheck = User.objects.get(username=username)
+                error_messages += ["Username already exists, please try a different one."]
+            except:
+                pass
+        
         
         email = request.POST.get('email')
-        try:
-            uniqueEmailCheck = UserProfile.objects.get(email=email)
-            error_messages += ["Email already exists, please try a different one."]
-        except:
-            pass
+        if not re.compile(emailPattern).match(email):
+            error_messages += ["Please enter a valid email."]
+        else:
+            try:
+                uniqueEmailCheck = UserProfile.objects.get(email=email)
+                error_messages += ["Email already exists, please try a different one."]
+            except:
+                pass
 
         password1 = request.POST.get('password1')
+        if not re.compile(passwordPattern).match(password1):
+            error_messages += ["Please enter a valid password."]
         password2 = request.POST.get('password2')
         
         if not password2 == password1:
@@ -87,6 +110,11 @@ def signup(request):
             
         if len(error_messages) > 0:
             x = {}
+            x['first_namePattern'] = first_namePattern
+            x['last_namePattern'] = last_namePattern
+            x['emailPattern'] = emailPattern
+            x['usernamePattern'] = usernamePattern
+            x['passwordPattern'] = passwordPattern
             x['error_messages'] = error_messages
             return render(request, 'main/signupProcess/signupForm.html', x)
         
@@ -101,7 +129,13 @@ def signup(request):
         request.session['attempt_id'] = attemptObj.id
         return HttpResponseRedirect(reverse('main:verification_code'))
     else:
-        return render(request, 'main/signupProcess/signupForm.html')
+        x = {}
+        x['first_namePattern'] = first_namePattern
+        x['last_namePattern'] = last_namePattern
+        x['emailPattern'] = emailPattern
+        x['usernamePattern'] = usernamePattern
+        x['passwordPattern'] = passwordPattern
+        return render(request, 'main/signupProcess/signupForm.html', x)
 
 def verificationCode(request):
     if request.method == "POST":
