@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 import smtplib
 from email.mime.text import MIMEText
+from django.db.models import Q
 
 def sendGmail(info):
     msg = MIMEText(u'{}'.format(info['b']),'html')
@@ -46,16 +47,23 @@ def login_user(request):
     
 def logout_user(request):
     logout(request)
-    return render(request, 'main/login.html')
-    
+    return redirect('main:login_user')
+  
+def home(request):
+    if request.user.is_authenticated:
+        return redirect('main:profile')
+    else:
+        return redirect('main:login_user')
+        
+ 
 def signup(request):
     error_messages = []
     def generateVerificationCode():
         return randint(10001,98765)
         
     if request.method == "POST":
-        first_name= request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
+        first_name= request.POST.get('first_name').lower().capitalize()
+        last_name = request.POST.get('last_name').lower().capitalize()
         
         username = request.POST.get('username')
         try:
@@ -112,7 +120,9 @@ def verificationCode(request):
                 first_name = attemptObj.first_name,
                 last_name = attemptObj.last_name,
                 email = attemptObj.email)
-                
+            
+            SignUpAttempt.objects.filter(Q(username=attemptObj.username) | Q(email=attemptObj.email)).delete()
+            
             login(request,userObj)
             
             # return render(request, 'main/profile.html')
