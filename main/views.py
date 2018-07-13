@@ -200,4 +200,11 @@ def profile(request):
     x['currentUser'] = currentUser
     
     return render(request, 'main/profile.html', x)
+    
+def posts(request):
+    posts = ForumPost.objects.all()
+    
+    x = {}
+    x['posts'] = posts
+    return render(request, 'main/posts.html', x)
 # Create your views here.

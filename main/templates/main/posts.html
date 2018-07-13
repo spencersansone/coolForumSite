@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+<div class="col-sm-12">
+    {% for post in posts %}
+    <h1>Title: {{post.title}}</h1>
+    <h1>User that posted: {{post.user_profile}}</h1>
+    <h1>Content: {{post.content}}</h1>
+    <h1>=======================</h1>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -7,6 +7,12 @@ class UserProfile(models.Model):
     last_name = models.CharField(max_length=100)
     email = models.EmailField()
     
+    def __str__(self):
+        return "{}: {} {}".format(
+            self.user.username,
+            self.first_name,
+            self.last_name)
+    
 class SignUpAttempt(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -14,6 +20,11 @@ class SignUpAttempt(models.Model):
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
     verification_code = models.CharField(max_length=100)
+    
+class ForumPost(models.Model):
+    title = models.CharField(max_length=100)
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    content = models.TextField(max_length=10000)
     
 
 # Create your models here.
