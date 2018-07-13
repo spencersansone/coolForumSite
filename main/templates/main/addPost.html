@@ -19,12 +19,12 @@
     
     <div class="form-group">
       <label for="title">Title:</label>
-      <input type="text" class="form-control" name="title" required="required" pattern={{titlePattern}} placeholder="Title">
+      <input type="text" class="form-control" name="title" required="required" pattern={{titlePattern}} placeholder="Title" value="{{titleAttempted}}">
     </div>
     
     <div class="form-group">
       <label for="content">Content:</label>
-      <textarea class="form-control" name="content" rows="3"></textarea>
+      <textarea class="form-control" name="content" placeholder="Enter content here..." rows="3">{{contentAttempted}}</textarea>
     </div>
     
     <div class="form-group">

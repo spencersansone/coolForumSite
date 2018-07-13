@@ -110,7 +110,14 @@ def signup(request):
             x['emailPattern'] = emailPattern
             x['usernamePattern'] = usernamePattern
             x['passwordPattern'] = passwordPattern
+            
             x['error_messages'] = error_messages
+            
+            x['first_nameAttempted'] = first_name
+            x['last_nameAttempted'] = last_name
+            x['emailAttempted'] = email
+            x['usernameAttempted'] = username
+            x['passwordAttempted'] = password1
             return render(request, 'main/signupProcess/signupForm.html', x)
         
         attemptObj = SignUpAttempt.objects.create(
@@ -238,7 +245,11 @@ def addPost(request):
             x = {}
             x['titlePattern'] = titlePattern
             x['contentPattern'] = contentPattern
+            
             x['error_messages'] = error_messages
+            
+            x['titleAttempted'] = title
+            x['contentAttempted'] = content
             return render(request, 'main/addPost.html', x)
         
         ForumPost.objects.create(
