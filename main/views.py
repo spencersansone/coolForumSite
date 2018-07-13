@@ -49,16 +49,38 @@ def logout_user(request):
     return render(request, 'main/login.html')
     
 def signup(request):
+    error_messages = []
     def generateVerificationCode():
         return randint(10001,98765)
         
     if request.method == "POST":
         first_name= request.POST.get('first_name')
         last_name = request.POST.get('last_name')
-        email = request.POST.get('email')
+        
         username = request.POST.get('username')
+        try:
+            uniqueUserCheck = User.objects.get(username=username)
+            error_messages += ["Username already exists, please try a different one."]
+        except:
+            pass
+        
+        email = request.POST.get('email')
+        try:
+            uniqueEmailCheck = UserProfile.objects.get(email=email)
+            error_messages += ["Email already exists, please try a different one."]
+        except:
+            pass
+
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
+        
+        if not password2 == password1:
+            error_messages += ["Passwords do not match, please try again."]
+            
+        if len(error_messages) > 0:
+            x = {}
+            x['error_messages'] = error_messages
+            return render(request, 'main/signupProcess/signupForm.html', x)
         
         attemptObj = SignUpAttempt.objects.create(
             first_name = first_name,
