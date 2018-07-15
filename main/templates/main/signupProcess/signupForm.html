@@ -5,11 +5,16 @@
 {% block body %}
 <div class="col-sm-12">
   {% if error_messages %}
-    <h3 style="color:#8e2020;font-weight:bold;">Errors:</h3>
+    <div class="alert alert-danger" role="alert">
+      <h3 style="color:#8e2020;font-weight:bold;">Error:</h3>
+      <ul>
+      {% for message in error_messages %}
+      
+      <li>{{ message }}</li>
     
-    {% for message in error_messages %}
-    <h3 style="color:#8e2020;font-weight:bold;">{{ message }}</h3>
-    {% endfor %}
+      {% endfor %}
+      </ul>
+    </div>
     
   {% endif %}
   

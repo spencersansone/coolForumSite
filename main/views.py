@@ -174,7 +174,7 @@ def verificationCode(request):
         else:
             x = {}
             x['attempt_id'] = request.session.get('attempt_id')
-            x['error_message'] = "Incorrect code!"
+            x['error_message'] = "Incorrect code, please try again."
             return render(request, 'main/signupProcess/verificationCode.html',x)
         
     else:
@@ -258,11 +258,11 @@ def addPost(request):
         
         content = request.POST.get('content')
         if not re.compile(contentPattern).match(content):
-            error_messages += ["For your content, please enter at least 1 character but no more than 10,000."]
+            error_messages += ["For your content, please enter at least 1 character (but no more than 10,000.)"]
             
         title = request.POST.get('title')
         if not re.compile(titlePattern).match(title):
-            error_messages += ["For your title, please enter at least 1 character but no more than 100."]
+            error_messages += ["For your title, please enter at least 1 character (but no more than 100.)"]
     
         if len(error_messages) > 0:
             x = {}

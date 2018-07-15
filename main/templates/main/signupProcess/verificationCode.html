@@ -19,7 +19,10 @@ justify-content-md-center
   <img src="https://png.icons8.com/dusk/100/000000/phonelink-lock.png">
   <div><br></div>
   {% if error_message %}
-    <h3 style="color:#8e2020;font-weight:bold;">{{ error_message }}</h3>
+  <div class="alert alert-danger" role="alert">
+    {{ error_message }}
+  </div>
+    
   {% endif %}
   <form role="form" action="{% url 'main:verification_code' %}" method="post" enctype="multipart/form-data">
     
