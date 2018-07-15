@@ -33,7 +33,8 @@ def generateVerificationCode():
 
 def login_user(request):
     if request.method == "POST":
-        username = request.POST.get('username')
+        username = request.POST.get('username').lower()
+        print(username)
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
@@ -74,7 +75,8 @@ def signup(request):
         if not re.compile(last_namePattern).match(last_name):
             error_messages += ["Please enter a valid last name."]
         
-        username = request.POST.get('username')
+        username = request.POST.get('username').lower()
+        print(username)
         if not re.compile(usernamePattern).match(username):
             error_messages += ["Please enter a valid username."]
         else:
