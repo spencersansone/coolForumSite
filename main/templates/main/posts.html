@@ -11,9 +11,7 @@
     </nav>
     <a href="{% url 'main:add_post' %}"><button type="button" class="btn btn-success btn-lg btn-block">Add Post</button></a>
     {% for post in posts %}
-    <h1>Title: {{post.title}}</h1>
-    <h1>User that posted: {{post.user_profile}}</h1>
-    <h1>Content: {{post.content}}</h1>
+    <h1><a href="{% url 'main:posts' %}{{post.id}}/">Title: {{post.title}}</a></h1>
     <h1>=======================</h1>
     {% endfor %}
 </div>

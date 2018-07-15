@@ -10,7 +10,7 @@ from email.mime.text import MIMEText
 from django.db.models import Q
 import re
 from django.contrib.auth.decorators import login_required
-
+from django.views import generic
 
 def sendGmail(info):
     msg = MIMEText(u'{}'.format(info['b']),'html')
@@ -241,6 +241,18 @@ def posts(request):
     x = {}
     x['posts'] = posts
     return render(request, 'main/posts.html', x)
+    
+
+# def postDetail(request):
+#     posts = ForumPost.objects.all()
+    
+#     x = {}
+#     x['posts'] = posts
+#     return render(request, 'main/postDetail.html', x)
+
+class postDetail(generic.DetailView):
+    model = ForumPost
+    template_name = 'main/postDetail.html'
 
 @login_required
 def addPost(request):
