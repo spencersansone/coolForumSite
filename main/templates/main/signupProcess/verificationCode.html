@@ -2,8 +2,22 @@
 
 {% block title %}Verification Code{% endblock %}
 
+{% block style %}
+#baseRow{
+  text-align:center;
+}
+{% endblock %}
+
+{% block baseRowClass %}
+justify-content-md-center
+{% endblock %}
+
+
+
 {% block body %}
-<div class="col-sm-12">
+<div class="col-sm-6">
+  <img src="https://png.icons8.com/dusk/100/000000/phonelink-lock.png">
+  <div><br></div>
   {% if error_message %}
     <h3 style="color:#8e2020;font-weight:bold;">{{ error_message }}</h3>
   {% endif %}
@@ -12,8 +26,10 @@
     {% csrf_token %}
     
     <div class="form-group">
-      <label for="verification_code">Verification Code</label>
-      <input type="text" class="form-control" name="verification_code" placeholder="Verification Code">
+      <label for="verification_code">
+        We've sent a verification code to your email address.
+        Please check your inbox:</label>
+      <input type="text" class="form-control" name="verification_code" placeholder="Enter code here">
     </div>
     
     <input type="hidden" class="form-control" name="attempt_id" value="{{attempt_id}}">
