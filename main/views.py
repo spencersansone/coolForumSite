@@ -217,7 +217,7 @@ def resendVerificationCode(request):
 
 def home(request):
     if request.user.is_authenticated:
-        return redirect('main:profile')
+        return redirect('main:posts')
     else:
         return redirect('main:login_user')
         
@@ -241,14 +241,6 @@ def posts(request):
     x = {}
     x['posts'] = posts
     return render(request, 'main/posts.html', x)
-    
-
-# def postDetail(request):
-#     posts = ForumPost.objects.all()
-    
-#     x = {}
-#     x['posts'] = posts
-#     return render(request, 'main/postDetail.html', x)
 
 class postDetail(generic.DetailView):
     model = ForumPost
