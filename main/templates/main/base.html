@@ -26,13 +26,14 @@
     <body>
         <div class="container-fluid">
             <div id="baseRow" class="row {% block baseRowClass %}{%endblock %}">
-                {% if request.user.is_authenticated %}
+                
                 <div class="col-sm-12">
                     <nav class="navbar navbar-expand-lg navbar-light bg-light">
                       <a class="navbar-brand" href="{% url 'main:home' %}">Cool Forum Site</a>
                       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                       </button>
+                      {% if request.user.is_authenticated %}
                       <div class="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav">
                           <li class="nav-item">
@@ -48,9 +49,9 @@
                           </li>
                         </ul>
                       </div>
+                      {% endif %}
                     </nav>
                 </div>
-                {% endif %}
                 
                 {% block baseBreak %}
                 <div class="col-sm-12">
