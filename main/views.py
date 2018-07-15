@@ -147,7 +147,7 @@ def signup(request):
 
 def verificationCode(request):
     if request.method == "POST":
-        verification_code = request.POST.get('verification_code')
+        verification_code = request.POST.get('verification_code').replace(" ","")
         attempt_id = request.POST.get('attempt_id')
         
         attemptObj = SignUpAttempt.objects.get(id=attempt_id)

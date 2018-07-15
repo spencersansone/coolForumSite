@@ -29,7 +29,7 @@ justify-content-md-center
       <label for="verification_code">
         We've sent a verification code to your email address.
         Please check your inbox:</label>
-      <input type="text" class="form-control" name="verification_code" placeholder="Enter code here">
+      <input type="text" class="form-control" name="verification_code" required="required" pattern="[ 0-9]+" placeholder="Enter code here">
     </div>
     
     <input type="hidden" class="form-control" name="attempt_id" value="{{attempt_id}}">
