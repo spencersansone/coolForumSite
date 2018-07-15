@@ -35,6 +35,8 @@ justify-content-md-center
     <input type="hidden" class="form-control" name="attempt_id" value="{{attempt_id}}">
     
     <div class="form-group">
+      <h4>Didn't get a code?</h4>
+      <h4><a href="{% url 'main:resend_verification_code' %}">Send email again</a></h4>
       <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
     </div>
     

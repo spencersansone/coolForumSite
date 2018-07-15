@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^posts/$', views.posts, name='posts'),
     url(r'^addPost/$', views.addPost, name='add_post'),
     url(r'^verificationCode/$', views.verificationCode, name='verification_code'),
+    url(r'^resendVerificationCode/$', views.resendVerificationCode, name='resend_verification_code'),
 ]

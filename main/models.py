@@ -20,6 +20,7 @@ class SignUpAttempt(models.Model):
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
     verification_code = models.CharField(max_length=100)
+    verification_code_email_sent = models.BooleanField()
     
 class ForumPost(models.Model):
     title = models.CharField(max_length=100)

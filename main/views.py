@@ -28,6 +28,9 @@ def sendGmail(info):
     except:
         print('Something went wrong...')
 
+def generateVerificationCode():
+    return randint(10001,98765)
+
 def login_user(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -60,9 +63,6 @@ def signup(request):
     emailPattern = "[^@]+@[^@]+\.[^@]+"
     usernamePattern = "[A-Za-z0-9@.+-_]+"
     passwordPattern = "[\S\s]{8,16}"
-    
-    def generateVerificationCode():
-        return randint(10001,98765)
         
     if request.method == "POST":
         
@@ -126,7 +126,8 @@ def signup(request):
             email = email,
             username = username,
             password = password1,
-            verification_code = generateVerificationCode())
+            verification_code = generateVerificationCode(),
+            verification_code_email_sent = False)
         
         request.session['attempt_id'] = attemptObj.id
         return HttpResponseRedirect(reverse('main:verification_code'))
@@ -168,7 +169,7 @@ def verificationCode(request):
         else:
             x = {}
             x['attempt_id'] = request.session.get('attempt_id')
-            x['error_message'] = "WRONG"
+            x['error_message'] = "Incorrect code!"
             return render(request, 'main/signupProcess/verificationCode.html',x)
         
     else:
@@ -190,11 +191,24 @@ def verificationCode(request):
         {}
         """.format(attemptObj.verification_code)
         
-        sendGmail(info)
+        if not attemptObj.verification_code_email_sent:
+            sendGmail(info)
+            attemptObj.verification_code_email_sent = True
+            attemptObj.save()
         
         
         
         return render(request, 'main/signupProcess/verificationCode.html',x)
+        
+def resendVerificationCode(request):
+    attempt_id = request.session.get('attempt_id')
+    attemptObj = SignUpAttempt.objects.get(id=attempt_id)
+    
+    attemptObj.verification_code_email_sent = False
+    attemptObj.verification_code = generateVerificationCode()
+    attemptObj.save()
+    
+    return redirect('main:verification_code')
 
 def home(request):
     if request.user.is_authenticated:
